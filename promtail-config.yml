@@ -15,4 +15,4 @@ scrape_configs:
           - localhost
         labels:
           job: flask-app
-          __path__: /app/logs/*.log  # Promtail scrapes logs from here
+          __path__: /app/logs/*.log
