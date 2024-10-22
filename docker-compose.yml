@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    container_name: stock_prediction_app
+    ports:
+      - "5001:5001"
+      - "8000:8000"
+      - "9080:9080"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - MONGO_URI=mongodb://<external-mongo-host>:27017/
+
+  loki:
+    image: grafana/loki:2.7.3
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.7.3
+    container_name: promtail
+    volumes:
+      - ./logs:/app/logs
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+    command: -config.file=/etc/promtail/promtail-config.yml
+    ports:
+      - "9080:9080"
